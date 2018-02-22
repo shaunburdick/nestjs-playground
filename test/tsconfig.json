@@ -1,0 +1,7 @@
+// Dedicated test tsconfig for correct editor highlighting and any default overrides from standard config
+{
+  "extends": "../tsconfig.json",
+  "include": [
+    "./**/*.spec.ts"
+  ]
+}
