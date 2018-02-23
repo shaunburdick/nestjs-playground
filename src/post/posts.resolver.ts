@@ -13,17 +13,7 @@ export class PostsResolver {
   async getPosts(obj, args, context, info) {
     const { limit, offset } = args;
 
-    let data = await this.postsService.findAll();
-    const totalCount = data.length;
-
-    if(offset) {
-      data = data.slice(parseInt(offset, 10));
-    }
-    if(limit) {
-      data = data.slice(0, parseInt(limit, 10));
-    }
-
-    return { totalCount, data };
+    return this.postsService.findAll(parseInt(limit, 10), parseInt(offset, 10));
   }
 
   @Query('post')

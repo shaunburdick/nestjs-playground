@@ -1,5 +1,5 @@
 import { Component } from '@nestjs/common';
-import { User, UserDto } from './interfaces/user.interface';
+import { User, UserDto, UserPage } from './interfaces/user.interface';
 import * as shortid from 'shortid';
 
 @Component()
@@ -15,8 +15,22 @@ export class UsersService {
     return this.users[idx - 1];
   }
 
-  async findAll(): Promise<User[]> {
-    return this.users;
+  async findAll(limit?: number, offset?: number): Promise<UserPage> {
+    let data = this.users;
+    const totalCount = data.length;
+
+    if (offset) {
+      data = data.slice(offset);
+    }
+
+    if (limit) {
+      data = data.slice(0, limit);
+    }
+
+    return {
+      totalCount,
+      data
+    };
   }
 
   async find(id: string): Promise<User | undefined> {

@@ -25,7 +25,8 @@ export class Post extends PostDto {
   id: string;
 
   @ApiModelProperty({
-    description: 'Date of the post'
+    description: 'Date of the post',
+    type: String
   })
   created: Date;
 
@@ -54,7 +55,22 @@ export class Comment extends CommentDto {
   id: string;
 
   @ApiModelProperty({
-    description: 'Date of the comment'
+    description: 'Date of the comment',
+    type: String
   })
   created: Date;
+}
+
+export class PostPage {
+  @ApiModelProperty({
+    description: 'Total number of posts'
+  })
+  totalCount: number;
+
+  @ApiModelProperty({
+    description: 'List of posts',
+    isArray: true,
+    type: Post
+  })
+  data: Post[];
 }

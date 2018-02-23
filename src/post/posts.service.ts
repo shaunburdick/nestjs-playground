@@ -1,5 +1,5 @@
 import { Component } from '@nestjs/common';
-import { Comment, CommentDto, Post, PostDto } from './interfaces/post.interface';
+import { Comment, CommentDto, Post, PostDto, PostPage } from './interfaces/post.interface';
 import * as shortid from 'shortid';
 
 @Component()
@@ -17,8 +17,22 @@ export class PostsService {
     return this.posts[idx - 1];
   }
 
-  async findAll(): Promise<Post[]> {
-    return this.posts;
+  async findAll(limit?: number, offset?: number): Promise<PostPage> {
+    let data = this.posts;
+    const totalCount = data.length;
+
+    if (offset) {
+      data = data.slice(offset);
+    }
+
+    if (limit) {
+      data = data.slice(0, limit);
+    }
+
+    return {
+      totalCount,
+      data
+    };
   }
 
   async find(id: string): Promise<Post | undefined> {

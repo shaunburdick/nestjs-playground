@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
-import { ApiProduces, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param, Delete, Query } from '@nestjs/common';
+import { ApiProduces, ApiOperation, ApiResponse, ApiImplicitQuery } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { User, UserDto } from './interfaces/user.interface';
+import { User, UserDto, UserPage } from './interfaces/user.interface';
 
 @ApiProduces('application/json')
 @Controller('users')
@@ -28,11 +28,18 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'A list of all the users',
-    type: User,
-    isArray: true
+    type: UserPage
   })
-  async findAll(): Promise<User[]> {
-    return this.usersService.findAll();
+  @ApiImplicitQuery({
+    name: 'limit',
+    required: false
+  })
+  @ApiImplicitQuery({
+    name: 'offset',
+    required: false
+  })
+  async findAll(@Query('limit') limit?: string, @Query('offset') offset?: string): Promise<UserPage> {
+    return this.usersService.findAll(parseInt(limit || '', 10), parseInt(offset || '', 10));
   }
 
   @Get(':id')

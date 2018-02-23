@@ -1,7 +1,7 @@
-import { Controller, Get, Post as HttpPost, Body, Param, Delete, HttpCode } from '@nestjs/common';
-import { ApiProduces, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, Post as HttpPost, Body, Param, Delete, HttpCode, Query } from '@nestjs/common';
+import { ApiProduces, ApiOperation, ApiResponse, ApiImplicitQuery } from '@nestjs/swagger';
 import { PostsService } from './posts.service';
-import { PostDto, Post, Comment, CommentDto } from './interfaces/post.interface';
+import { PostDto, PostPage, Post, Comment, CommentDto } from './interfaces/post.interface';
 
 @ApiProduces('application/json')
 @Controller('posts')
@@ -29,11 +29,18 @@ export class PostsController {
   @ApiResponse({
     status: 200,
     description: 'A list of all the posts',
-    type: Post,
-    isArray: true
+    type: PostPage
   })
-  async findAll(): Promise<Post[]> {
-    return this.postsService.findAll();
+  @ApiImplicitQuery({
+    name: 'limit',
+    required: false
+  })
+  @ApiImplicitQuery({
+    name: 'offset',
+    required: false
+  })
+  async findAll(@Query('limit') limit?: string, @Query('offset') offset?: string): Promise<PostPage> {
+    return this.postsService.findAll(parseInt(limit || '', 10), parseInt(offset || '', 10));
   }
 
   @Get(':id')

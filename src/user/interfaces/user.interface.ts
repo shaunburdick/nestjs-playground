@@ -18,3 +18,17 @@ export class User extends UserDto {
   })
   id: string;
 }
+
+export class UserPage {
+  @ApiModelProperty({
+    description: 'Total number of users'
+  })
+  totalCount: number;
+
+  @ApiModelProperty({
+    description: 'List of users',
+    isArray: true,
+    type: User
+  })
+  data: User[];
+}
