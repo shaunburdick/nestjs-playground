@@ -24,3 +24,8 @@ type PostPage {
   totalCount: Int!
   data: [Post!]!
 }
+
+type CommentPage {
+  totalCount: Int!
+  data: [Comment!]!
+}

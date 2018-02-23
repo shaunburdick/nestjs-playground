@@ -1,5 +1,5 @@
 import { Resolver, Query, ResolveProperty } from '@nestjs/graphql';
-import { PostsService } from './posts.service';
+import { PostsService } from '../post/posts.service';
 import { UsersService } from '../user/users.service';
 
 @Resolver('Post')

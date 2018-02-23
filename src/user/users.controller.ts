@@ -1,14 +1,19 @@
-import { Controller, Get, Post, Body, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post as HttpPost, Body, Param, Delete, Query } from '@nestjs/common';
 import { ApiProduces, ApiOperation, ApiResponse, ApiImplicitQuery } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { User, UserDto, UserPage } from './interfaces/user.interface';
+import { PostsService } from '../post/posts.service';
+import { Post, PostPage, Comment, CommentPage } from '../post/interfaces/post.interface';
 
 @ApiProduces('application/json')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly postsService: PostsService
+  ) {}
 
-  @Post()
+  @HttpPost()
   @ApiOperation({
     title: 'Create User'
   })
@@ -64,6 +69,46 @@ export class UsersController {
   })
   async remove(@Param('id') id: string): Promise<void> {
     this.usersService.remove(id);
+  }
+
+  @Get(':id/posts')
+  @ApiOperation({
+    title: 'Get posts by user id'
+  })
+  @ApiImplicitQuery({
+    name: 'limit',
+    required: false
+  })
+  @ApiImplicitQuery({
+    name: 'offset',
+    required: false
+  })
+  async getPostsByUserId(
+    @Param('id') id: string,
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string
+  ): Promise<PostPage> {
+    return this.postsService.getPostsByUserId(id, parseInt(limit || '', 10), parseInt(offset || '', 10));
+  }
+
+  @Get(':id/comments')
+  @ApiOperation({
+    title: 'Get comments by user id'
+  })
+  @ApiImplicitQuery({
+    name: 'limit',
+    required: false
+  })
+  @ApiImplicitQuery({
+    name: 'offset',
+    required: false
+  })
+  async getCommentsByUserId(
+    @Param('id') id: string,
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string
+  ): Promise<CommentPage> {
+    return this.postsService.getCommentsByUserId(id, parseInt(limit || '', 10), parseInt(offset || '', 10));
   }
 
 }

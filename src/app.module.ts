@@ -8,12 +8,14 @@ import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import { GraphQLModule, GraphQLFactory } from '@nestjs/graphql';
 import { UsersModule } from './user/users.module';
 import { PostsModule } from './post/posts.module';
+import { GraphQLResolverModule } from './graphqlResolver/graphql.module';
 
 @Module({
   imports: [
     UsersModule,
     PostsModule,
-    GraphQLModule
+    GraphQLModule,
+    GraphQLResolverModule
   ],
   components: [],
 })

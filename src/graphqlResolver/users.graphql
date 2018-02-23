@@ -2,6 +2,9 @@ type User {
   id: ID!
   name: String!
   email: String!
+  comments(limit: Int, offset: Int): CommentPage
+  posts(limit: Int, offset: Int): PostPage
+
 }
 
 type Query {

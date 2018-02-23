@@ -1,5 +1,5 @@
 import { Component } from '@nestjs/common';
-import { Comment, CommentDto, Post, PostDto, PostPage } from './interfaces/post.interface';
+import { Comment, CommentDto, CommentPage, Post, PostDto, PostPage } from './interfaces/post.interface';
 import * as shortid from 'shortid';
 
 @Component()
@@ -67,5 +67,45 @@ export class PostsService {
     }
 
     post.comments = post.comments.filter((comment) => comment.id !== commentId);
+  }
+
+  async getPostsByUserId(userId: string, limit?: number, offset?: number): Promise<PostPage> {
+    let data = this.posts.filter((post) => post.authorId === userId);
+
+    const totalCount = data.length;
+
+    if (offset) {
+      data = data.slice(offset);
+    }
+
+    if (limit) {
+      data = data.slice(0, limit);
+    }
+
+    return {
+      totalCount,
+      data
+    };
+  }
+
+  async getCommentsByUserId(userId: string, limit?: number, offset?: number): Promise<CommentPage> {
+    let data = this.posts
+      .map((post) => post.comments.filter((comment) => comment.authorId === userId))
+      .reduce((obj, postComments) => obj.concat(postComments), []);
+
+    const totalCount = data.length;
+
+    if (offset) {
+      data = data.slice(offset);
+    }
+
+    if (limit) {
+      data = data.slice(0, limit);
+    }
+
+    return {
+      totalCount,
+      data
+    };
   }
 }

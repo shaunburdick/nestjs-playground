@@ -74,3 +74,17 @@ export class PostPage {
   })
   data: Post[];
 }
+
+export class CommentPage {
+  @ApiModelProperty({
+    description: 'Total number of comment'
+  })
+  totalCount: number;
+
+  @ApiModelProperty({
+    description: 'List of comment',
+    isArray: true,
+    type: Comment
+  })
+  data: Comment[];
+}
