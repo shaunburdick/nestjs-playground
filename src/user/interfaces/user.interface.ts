@@ -4,12 +4,12 @@ export class UserDto {
   @ApiModelProperty({
     description: 'Name of the user'
   })
-  readonly name: string;
+  name: string;
 
   @ApiModelProperty({
     description: 'Email of the user'
   })
-  readonly email: string;
+  email: string;
 }
 
 export class User extends UserDto {

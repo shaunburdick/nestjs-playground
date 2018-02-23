@@ -7,13 +7,26 @@ export class UsersResolver {
     private readonly usersService: UsersService
   ) {}
 
+  @Query('users')
+  async getUsers(obj, args, context, info) {
+    const { limit, offset } = args;
+
+    let data = await this.usersService.findAll();
+    const totalCount = data.length;
+
+    if(offset) {
+      data = data.slice(parseInt(offset, 10));
+    }
+    if(limit) {
+      data = data.slice(0, parseInt(limit, 10));
+    }
+
+    return { totalCount, data };
+  }
+
   @Query('user')
   async getUser(obj, args, context, info) {
     const { id } = args;
-    if (id) {
-      return [this.usersService.find(id)];
-    } else {
-      return this.usersService.findAll();
-    }
+    return this.usersService.find(id);
   }
 }

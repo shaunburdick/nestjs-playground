@@ -5,5 +5,11 @@ type User {
 }
 
 type Query {
-  user(id: ID): [User]!
+  users(limit: Int, offset: Int): UserPage
+  user(id: ID!): User!
+}
+
+type UserPage {
+  totalCount: Int!
+  data: [User!]!
 }
