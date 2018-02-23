@@ -4,7 +4,11 @@ type User {
   email: String!
   comments(limit: Int, offset: Int): CommentPage
   posts(limit: Int, offset: Int): PostPage
+}
 
+input UserDto {
+  name: String!
+  email: String!
 }
 
 type Query {
@@ -15,4 +19,8 @@ type Query {
 type UserPage {
   totalCount: Int!
   data: [User!]!
+}
+
+type Mutation {
+  createUser(userDto: UserDto!): User!
 }

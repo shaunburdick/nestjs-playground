@@ -8,10 +8,21 @@ type Post {
   commentsCount: Int!
 }
 
+input PostDto {
+  authorId: ID!
+  name: String!
+  body: String!
+}
+
 type Comment {
   id: ID!
   created: Date!
   author: User!
+  body: String!
+}
+
+input CommentDto {
+  authorId: ID!
   body: String!
 }
 
@@ -28,4 +39,9 @@ type PostPage {
 type CommentPage {
   totalCount: Int!
   data: [Comment!]!
+}
+
+type Mutation {
+  createPost(postDto: PostDto!): Post!
+  addComment(commentDto: CommentDto!): Comment!
 }

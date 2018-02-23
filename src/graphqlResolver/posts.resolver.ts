@@ -1,6 +1,7 @@
-import { Resolver, Query, ResolveProperty } from '@nestjs/graphql';
+import { Resolver, Query, ResolveProperty, Mutation } from '@nestjs/graphql';
 import { PostsService } from '../post/posts.service';
 import { UsersService } from '../user/users.service';
+import { Post, Comment } from '../post/interfaces/post.interface';
 
 @Resolver('Post')
 export class PostsResolver {
@@ -32,6 +33,15 @@ export class PostsResolver {
     return post.comments.length;
   }
 
+  @Mutation('createPost')
+  async createPost(obj, { postDto }, context, info): Promise<Post> {
+    return this.postsService.create(postDto);
+  }
+
+  @Mutation('addComment')
+  async addComment(obj, { postId, commentDto }, context, info): Promise<Comment> {
+    return this.postsService.addComment(postId, commentDto);
+  }
 }
 
 @Resolver('Comment')

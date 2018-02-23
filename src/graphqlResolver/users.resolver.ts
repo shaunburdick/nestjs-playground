@@ -1,6 +1,7 @@
-import { Resolver, Query, ResolveProperty } from '@nestjs/graphql';
+import { Resolver, Query, ResolveProperty, Mutation } from '@nestjs/graphql';
 import { UsersService } from '../user/users.service';
 import { PostsService } from '../post/posts.service';
+import { User, UserDto } from '../user/interfaces/user.interface';
 
 @Resolver('User')
 export class UsersResolver {
@@ -23,12 +24,21 @@ export class UsersResolver {
   }
 
   @ResolveProperty('posts')
-  async getPosts(user) {
-    return this.postsService.getPostsByUserId(user.id);
+  async getPosts(user, args) {
+    const { limit, offset } = args;
+
+    return this.postsService.getPostsByUserId(user.id, parseInt(limit, 10), parseInt(offset, 10));
   }
 
   @ResolveProperty('comments')
-  async getComments(user) {
-    return this.postsService.getCommentsByUserId(user.id);
+  async getComments(user, args) {
+    const { limit, offset } = args;
+
+    return this.postsService.getCommentsByUserId(user.id, parseInt(limit, 10), parseInt(offset, 10));
+  }
+
+  @Mutation('createUser')
+  async createUser(obj, { userDto }, context, info): Promise<User> {
+    return this.usersService.create(userDto);
   }
 }
