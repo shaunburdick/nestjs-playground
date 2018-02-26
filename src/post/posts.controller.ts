@@ -39,8 +39,20 @@ export class PostsController {
     name: 'offset',
     required: false
   })
-  async findAll(@Query('limit') limit?: string, @Query('offset') offset?: string): Promise<PostPage> {
-    return this.postsService.findAll(parseInt(limit || '', 10), parseInt(offset || '', 10));
+  @ApiImplicitQuery({
+    name: 'sort',
+    required: false
+  })
+  async findAll(
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+    @Query('sort') sort?: string
+  ): Promise<PostPage> {
+    return this.postsService.findAll({
+      limit: parseInt(limit || '', 10),
+      offset: parseInt(offset || '', 10),
+      sort: PostsService.parseSort(sort || '')
+    });
   }
 
   @Get(':id')

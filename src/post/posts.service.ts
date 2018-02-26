@@ -1,46 +1,20 @@
 import { Component } from '@nestjs/common';
 import { Comment, CommentDto, CommentPage, Post, PostDto, PostPage } from './interfaces/post.interface';
+import { MemoryService, Page, FilterSortOpts } from '../mem.service';
 import * as shortid from 'shortid';
 
 @Component()
-export class PostsService {
-  private posts: Post[] = [];
+export class PostsService extends MemoryService<Post> {
 
   async create(postDto: PostDto): Promise<Post> {
-    const idx = this.posts.push({
+    const idx = this.data.push({
       id: shortid.generate(),
       created: new Date(),
       comments: [],
       ...postDto
     });
 
-    return this.posts[idx - 1];
-  }
-
-  async findAll(limit?: number, offset?: number): Promise<PostPage> {
-    let data = this.posts;
-    const totalCount = data.length;
-
-    if (offset) {
-      data = data.slice(offset);
-    }
-
-    if (limit) {
-      data = data.slice(0, limit);
-    }
-
-    return {
-      totalCount,
-      data
-    };
-  }
-
-  async find(id: string): Promise<Post | undefined> {
-    return this.posts.find((post) => post.id === id);
-  }
-
-  async remove(id: string): Promise<void> {
-    this.posts = this.posts.filter((post) => post.id !== id);
+    return this.data[idx - 1];
   }
 
   async addComment(postId: string, commentDto: CommentDto): Promise<Comment> {
@@ -69,43 +43,17 @@ export class PostsService {
     post.comments = post.comments.filter((comment) => comment.id !== commentId);
   }
 
-  async getPostsByUserId(userId: string, limit?: number, offset?: number): Promise<PostPage> {
-    let data = this.posts.filter((post) => post.authorId === userId);
+  async getPostsByUserId(userId: string, opts: FilterSortOpts): Promise<Page<Post>> {
+    const data = this.data.filter((post) => post.authorId === userId);
 
-    const totalCount = data.length;
-
-    if (offset) {
-      data = data.slice(offset);
-    }
-
-    if (limit) {
-      data = data.slice(0, limit);
-    }
-
-    return {
-      totalCount,
-      data
-    };
+    return this.filterAndSort(data, opts);
   }
 
-  async getCommentsByUserId(userId: string, limit?: number, offset?: number): Promise<CommentPage> {
-    let data = this.posts
+  async getCommentsByUserId(userId: string, opts: FilterSortOpts): Promise<Page<Comment>> {
+    const data = this.data
       .map((post) => post.comments.filter((comment) => comment.authorId === userId))
       .reduce((obj, postComments) => obj.concat(postComments), []);
 
-    const totalCount = data.length;
-
-    if (offset) {
-      data = data.slice(offset);
-    }
-
-    if (limit) {
-      data = data.slice(0, limit);
-    }
-
-    return {
-      totalCount,
-      data
-    };
+    return this.filterAndSort(data, opts);
   }
 }

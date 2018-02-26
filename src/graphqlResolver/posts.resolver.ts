@@ -12,9 +12,13 @@ export class PostsResolver {
 
   @Query('posts')
   async getPosts(obj, args, context, info) {
-    const { limit, offset } = args;
+    const { limit, offset, sort } = args;
 
-    return this.postsService.findAll(parseInt(limit, 10), parseInt(offset, 10));
+    return this.postsService.findAll({
+      limit: parseInt(limit, 10),
+      offset: parseInt(offset, 10),
+      sort
+    });
   }
 
   @Query('post')

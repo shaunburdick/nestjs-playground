@@ -1,47 +1,99 @@
+"A blog post"
 type Post {
+  "ID of the blog post"
   id: ID!
+
+  "The date the post was created"
   created: Date!
+
+  "The author of the post"
   author: User!
+
+  "The name of the post"
   name: String!
+
+  "The content of the post"
   body: String!
+
+  "Comments made on the post (usually garbage)"
   comments: [Comment!]!
-  commentsCount: Int!
+
+  "The number of comments on a post"
+  commentsCount: Int
 }
 
+"The content of a new post"
 input PostDto {
+  "The ID of the post author"
   authorId: ID!
+
+  "Name of the post"
   name: String!
+
+  "Content of the post"
   body: String!
 }
 
+"This makes people feel importing"
 type Comment {
+  "ID of the comment"
   id: ID!
+
+  "The date when the comment was made"
   created: Date!
+
+  "Author (idiot) of the comment"
   author: User!
+
+  "The content (garbage) of the comment"
   body: String!
 }
 
+"The content of a new comment"
 input CommentDto {
+  "The ID of the comment author"
   authorId: ID!
+
+  "What little value they might have to offer"
   body: String!
 }
 
+"The available queries"
 type Query {
-  posts(limit: Int, offset: Int): PostPage!
+  "Get a list of posts"
+  posts(
+    limit: Int,
+    offset: Int,
+    sort: [SortField!]
+  ): PostPage!
+
+  "Get a specific post by id"
   post(id: ID!): Post!
 }
 
+"The paginated Post results"
 type PostPage {
+  "Total number of posts that matched query"
   totalCount: Int!
+
+  "A list of posts"
   data: [Post!]!
 }
 
+"The paginated Comment results"
 type CommentPage {
+  "Total number of comments that matched query"
   totalCount: Int!
+
+  "A list of comments"
   data: [Comment!]!
 }
 
+"The available mutations"
 type Mutation {
+  "Create a new post"
   createPost(postDto: PostDto!): Post!
+
+  "Declare your moral superiority"
   addComment(commentDto: CommentDto!): Comment!
 }

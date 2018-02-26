@@ -1,18 +1,32 @@
+"A user"
 type User {
+  "ID of the user"
   id: ID!
+
+  "The name of the user"
   name: String!
+
+  "The email of the user"
   email: String!
+
+  "Comments made by the user so they feel important"
   comments(limit: Int, offset: Int): CommentPage
+
+  "Posts made by the user, mostly stuff from BuzzFeed"
   posts(limit: Int, offset: Int): PostPage
 }
 
+"The content of a new user"
 input UserDto {
+  "The name of the user"
   name: String!
+
+  "The email of the user (probably fake)"
   email: String!
 }
 
 type Query {
-  users(limit: Int, offset: Int): UserPage
+  users(limit: Int, offset: Int, sort: [SortField!]): UserPage
   user(id: ID!): User!
 }
 
@@ -22,5 +36,6 @@ type UserPage {
 }
 
 type Mutation {
+  "Create a new user"
   createUser(userDto: UserDto!): User!
 }

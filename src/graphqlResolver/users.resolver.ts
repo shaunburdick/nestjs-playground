@@ -12,9 +12,13 @@ export class UsersResolver {
 
   @Query('users')
   async getUsers(obj, args, context, info) {
-    const { limit, offset } = args;
+    const { limit, offset, sort } = args;
 
-    return this.usersService.findAll(parseInt(limit, 10), parseInt(offset, 10));
+    return this.usersService.findAll({
+      limit: parseInt(limit, 10),
+      offset: parseInt(offset, 10),
+      sort
+    });
   }
 
   @Query('user')
@@ -25,16 +29,24 @@ export class UsersResolver {
 
   @ResolveProperty('posts')
   async getPosts(user, args) {
-    const { limit, offset } = args;
+    const { limit, offset, sort } = args;
 
-    return this.postsService.getPostsByUserId(user.id, parseInt(limit, 10), parseInt(offset, 10));
+    return this.postsService.getPostsByUserId(user.id, {
+      limit: parseInt(limit, 10),
+      offset: parseInt(offset, 10),
+      sort
+    });
   }
 
   @ResolveProperty('comments')
   async getComments(user, args) {
-    const { limit, offset } = args;
+    const { limit, offset, sort } = args;
 
-    return this.postsService.getCommentsByUserId(user.id, parseInt(limit, 10), parseInt(offset, 10));
+    return this.postsService.getCommentsByUserId(user.id, {
+      limit: parseInt(limit, 10),
+      offset: parseInt(offset, 10),
+      sort
+    });
   }
 
   @Mutation('createUser')

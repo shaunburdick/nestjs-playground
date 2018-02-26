@@ -43,8 +43,20 @@ export class UsersController {
     name: 'offset',
     required: false
   })
-  async findAll(@Query('limit') limit?: string, @Query('offset') offset?: string): Promise<UserPage> {
-    return this.usersService.findAll(parseInt(limit || '', 10), parseInt(offset || '', 10));
+  @ApiImplicitQuery({
+    name: 'sort',
+    required: false
+  })
+  async findAll(
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+    @Query('sort') sort?: string
+  ): Promise<UserPage> {
+    return this.usersService.findAll({
+      limit: parseInt(limit || '', 10),
+      offset: parseInt(offset || '', 10),
+      sort: UsersService.parseSort(sort || '')
+    });
   }
 
   @Get(':id')
@@ -83,12 +95,21 @@ export class UsersController {
     name: 'offset',
     required: false
   })
+  @ApiImplicitQuery({
+    name: 'sort',
+    required: false
+  })
   async getPostsByUserId(
     @Param('id') id: string,
     @Query('limit') limit?: string,
-    @Query('offset') offset?: string
+    @Query('offset') offset?: string,
+    @Query('sort') sort?: string
   ): Promise<PostPage> {
-    return this.postsService.getPostsByUserId(id, parseInt(limit || '', 10), parseInt(offset || '', 10));
+    return this.postsService.getPostsByUserId(id, {
+      limit: parseInt(limit || '', 10),
+      offset: parseInt(offset || '', 10),
+      sort: PostsService.parseSort(sort || '')
+    });
   }
 
   @Get(':id/comments')
@@ -103,12 +124,21 @@ export class UsersController {
     name: 'offset',
     required: false
   })
+  @ApiImplicitQuery({
+    name: 'sort',
+    required: false
+  })
   async getCommentsByUserId(
     @Param('id') id: string,
     @Query('limit') limit?: string,
-    @Query('offset') offset?: string
+    @Query('offset') offset?: string,
+    @Query('sort') sort?: string
   ): Promise<CommentPage> {
-    return this.postsService.getCommentsByUserId(id, parseInt(limit || '', 10), parseInt(offset || '', 10));
+    return this.postsService.getCommentsByUserId(id, {
+      limit: parseInt(limit || '', 10),
+      offset: parseInt(offset || '', 10),
+      sort: PostsService.parseSort(sort || '')
+    });
   }
 
 }
